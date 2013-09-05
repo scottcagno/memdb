@@ -42,7 +42,7 @@ func (self *DataBase) GC(rate int64) {
 	time.AfterFunc(time.Duration(rate)*time.Second, func(){ self.GC(rate) })
 }
 
-// add new collection
+// add collection
 func (self *DataBase) AddCol(name string) int {
 	self.mu.Lock()
 	self.Collections[name]=&Collection{
@@ -57,31 +57,60 @@ func (self *DataBase) AddCol(name string) int {
 	return 0
 }
 
-// add new record to collection
-func (self **DataBase) AddRec(coll string, rec map[string][]string) int {}
+// add record(s)
+func (self *DataBase) AddRec(coll string, rec map[string][]string) int {
+	return 0
+}
 
-func (self *DataBase) AddRecKey(coll string, rec map[string][]string) int {}
+// add record key(s)
+func (self *DataBase) AddRecKey(coll string, rec map[string][]string) int {
+	return 0
+}
 
-// delete methods
-func (self *DataBase) DelCol(coll string) int {}
+// delete collection
+func (self *DataBase) DelCol(coll string) int {
+	return 0
+}
 
-func (self *DataBase) DelRec(coll string, rec map[string][]string) int {}
+// delete record(s)
+func (self *DataBase) DelRec(coll string, rec map[string][]string) int {
+	return 0
+}
 
-func (self *DataBase) DelRecKey(coll string, rec map[string][]string) int {}
+// delete record key(s)
+func (self *DataBase) DelRecKey(coll string, rec map[string][]string) int {
+	return 0
+}
 
-// update methods
-func (self *DataBase) UpdCol(coll string) int {}
+// update collection
+func (self *DataBase) UpdCol(coll string) int {
+	return 0
+}
 
-func (self *DataBase) UpdRec(coll string, rec map[string][]string) int {}
+// update record(s)
+func (self *DataBase) UpdRec(coll string, rec map[string][]string) int {
+	return 0
+}
 
-func (self *DataBase)	UpdRecKey(coll string, rec map[string][]string) int {}
+// update record key(s)
+func (self *DataBase) UpdRecKey(coll string, rec map[string][]string) int {
+	return 0
+}
 
-// get methods
-func (self *DataBase) GetCol(coll string) int {}
+// get collection
+func (self *DataBase) GetCol(coll string) int {
+	return 0
+}
 
-func (self *DataBase) GetRec(coll string, rec map[string][]string) int {}
+// get record(s)
+func (self *DataBase) GetRec(coll string, rec map[string][]string) int {
+	return 0
+}
 
-func (self *DataBase) GetRecKey(coll string, rec map[string][]string) int {}
+// get record key(s)
+func (self *DataBase) GetRecKey(coll string, rec map[string][]string) int {
+	return 0
+}
 
 // collection struct
 type Collection struct {
@@ -90,35 +119,17 @@ type Collection struct {
 	Records []map[string][]string
 }
 
-
-
-// adding a new record
-func (self *DataBase) Add(coll, key [32]byte, val [][]byte) int {
-	return 0
-}
-
-// delete a record
-func (self *DataBase) Del(coll, key [32]byte, val [][]byte) int {
-	// db.Del("customer", nil, nil) 				-> delete collection
-	// db.Del("customer", "name", "samuel jackson")	-> delete record
-
-	// DELETE -> /orders/?name=scott&quantity=lt&quantity=500
-	//	func	   coll			key, val pairs <-- ie multiple
-
-	// [0]Record{
-	//		"email" : ["greg@awesome.com", "scott@lame.com"], PUT /orders/?email=scott@lame.com
-	//		"first" : ["Greg"], 
-	//		"last"  : ["Pechiro"],
-	//	}
-	
-	return 0
-}
-
 // HELPER -- add n number of records
-func (self *DataBase) AddRandom(n int64) {}
+func (self *DataBase) AddRandom(n int64) {
+	return
+}
 
 // HELPER -- remove n number of records
-func (self *DataBase) DelRandom(n int64) {}
+func (self *DataBase) DelRandom(n int64) {
+	return
+}
 
 // HELPER -- show memory stats
-func (self *DataBase) ShowStats() {}
+func (self *DataBase) ShowStats() {
+	return
+}
