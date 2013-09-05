@@ -19,26 +19,24 @@ import (
 
 // server struct
 type Server struct {
-	s *http.Server
+	http.Server
 }
 
 // initialize and return server
-func InitServer(host string, muxer http.Handler) *Server {
-	return &Server{
-		s : &http.Server {
-			Addr 			: host,
-			Handler 		: muxer,
-	    	ReadTimeout    	: 10*time.Second,
-	    	WriteTimeout   	: 10*time.Second,
-	    	MaxHeaderBytes 	: 1<<13,         
-	    	TLSConfig      	: nil,
-			TLSNextProto	: nil,	
-		},	
-	}
+func InitServer() *Server {
+	self := &Server{}
+	self.ReadTimeout    : 10*time.Second,
+	self.WriteTimeout   : 10*time.Second,
+	self.MaxHeaderBytes : 1<<13,	// 8kb
+	self.TLSConfig      : nil,		// https, NA
+	self.TLSNextProto	: nil,		// https, NA
+	return self
 }
 
 // listener
-func (self *Server) Listen() {
+func (self *Server) Listen(host string, muxer http.Handler) {
+	self.Addr 		= host,
+	self.Handler 	= muxer,
 	err := self.s.ListenAndServe()
 	if err != nil {
 		log.Fatal("Listen failed: ", err)
