@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-// database struct
+// database struct yeah
 type DataBase struct {
 	Collections map[string]*Collection
 	mu			sync.Mutex
