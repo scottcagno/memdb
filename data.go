@@ -13,6 +13,26 @@ import (
 	"time"
 )
 
+type DataBase struct {
+	Name 	string
+	Items	
+	Expired	[]*expItems
+	mu		sync.Mutex
+}
+
+type expItems struct {
+	key string
+	ttl int64
+}
+
+type Item struct {
+	Name
+	Items 	map[string][][]byte
+}
+
+
+
+/*
 // database struct
 type DataBase struct {
 	Collections map[string]*Collection
@@ -43,12 +63,14 @@ func (self *DataBase) GC(rate int64) {
 }
 
 // add collection
-func (self *DataBase) AddCol(name string) int {
+func (self *DataBase) Add(name string) int {
 	self.mu.Lock()
 	self.Collections[name]=&Collection{
-		name: name,
-		Records: make([]map[string][]string, 0),
+		name	: name,
+		ts		: time.Now(),
+		Records	: make([]map[string][]string, 0),
 	}
+	// check to make sure collection exists
 	if _, ok := self.Collections[name]; ok {
 		self.mu.Unlock()
 		return 1
@@ -57,13 +79,44 @@ func (self *DataBase) AddCol(name string) int {
 	return 0
 }
 
-// add record(s)
-func (self *DataBase) AddRec(coll string, rec map[string][]string) int {
+// delete collection
+func (self *DataBase) Del(name string) int {
+	self.mu.Lock()
+	// make sure collection exists
+	if _, ok := self.Collections[name]; ok {
+		delete(self.Collections, name)
+	}
+	// make sure collection doesn't exist
+	if _, ok := self.Collections[name]; !ok {
+		self.mu.Unlock()
+		// successfully deleted
+		return 1
+	}
+	// fail
+	self.mu.Unlock()
 	return 0
 }
 
+// collection struct
+type Collection struct {
+	name 	string
+	ts 		time.Time
+	Records []map[string][]string
+}
+
+/*
+// add record(s)
+func (self *DataBase) AddRec(name string, record map[string][]string) int {
+	self.mu.Lock()
+	// check to make sure collection exists
+	if collection, ok := self.Collections[name]; ok {
+		collection = append(collection, record)
+	}
+	self.mu.Unlock()	
+}
+
 // add record key(s)
-func (self *DataBase) AddRecKey(coll string, rec map[string][]string) int {
+func (self *DataBase) AddRecKey(name string, rec map[string][]string) int {
 	return 0
 }
 
@@ -112,13 +165,6 @@ func (self *DataBase) GetRecKey(coll string, rec map[string][]string) int {
 	return 0
 }
 
-// collection struct
-type Collection struct {
-	name 	string
-	ts 		time.Time
-	Records []map[string][]string
-}
-
 // HELPER -- add n number of records
 func (self *DataBase) AddRandom(n int64) {
 	return
@@ -133,3 +179,4 @@ func (self *DataBase) DelRandom(n int64) {
 func (self *DataBase) ShowStats() {
 	return
 }
+*/
