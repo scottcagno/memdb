@@ -28,8 +28,8 @@ func InitServer() *Server {
 	self.ReadTimeout    : 10*time.Second,
 	self.WriteTimeout   : 10*time.Second,
 	self.MaxHeaderBytes : 1<<13,	// 8kb
-	self.TLSConfig      : nil,		// https, NA
-	self.TLSNextProto	: nil,		// https, NA
+	self.TLSConfig      : nil,	// https, NA
+	self.TLSNextProto   : nil,	// https, NA
 	return self
 }
 
