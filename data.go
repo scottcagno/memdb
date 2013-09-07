@@ -1,7 +1,7 @@
 /*
  *	Copyright (c) 2013, Scott Cagno
  *	All rights reserved. License at
- *  sites.google.com/site/bsdc3license
+ *  	sites.google.com/site/bsdc3license
  *
  * 	data.go -- memdb database
  */
@@ -13,49 +13,75 @@ import (
 	"time"
 )
 
-type DataBase struct {
-	Name 	string
-	Items	
-	Expired	[]*expItems
-	mu		sync.Mutex
-}
 
-type expItems struct {
+// expired sets (for GC)
+type expSets struct {
 	key string
 	ttl int64
 }
 
-type Item struct {
-	Name
-	Items 	map[string][][]byte
-}
-
-
-
-/*
-// database struct
+// database
 type DataBase struct {
-	Collections map[string]*Collection
-	mu			sync.Mutex
+	sets	map[string]*Set
+	mu	sync.Mutex
 }
 
-// initialize database and return
-func InitDataBase(gcrate int64) *DataBase {
-	self := &DataBase{
-		Collections: make(map[string]*Collection, 0),
+// init and return a DB instance
+func InitDB() *DB {
+	return &DB {
+		sets: map[string]*Set{},
+		expired: make([]*expSets, 0),	
 	}
-	if gcrate > 0 {
-		go func(){ self.GC(gcrate) }()
+}
+
+// return a set if one exists, else create new one
+func (self *DB) GetSet(name string) *Set {
+	self.mu.Lock()
+	if foundSet, ok := self.sets[name]; ok {
+		self.mu.Unlock()
+		return foundSet
 	}
+	self.mu.Unlock()
+	return InitSet(name)
+}
+
+// set struct
+type  Set struct {
+	Name	string
+	Records map[string]map[string][]string
+	mu 	sync.Mutex
+}
+
+// init and return Set instance
+func InitSet(name string, rate int64) *Set {
+	self := &Set {
+		Name : name,
+		Records : map[string]map[string][]string{},
+	}
+	if self.Rate > 0 { go self.GC(rate) }
+	unixts := fmt.Sprintf("%v", time.Now.Unix())
+	self.Records["conf"]=map[string][]string{ "ts", []string{ unixts } }
 	return self
 }
 
-// garbage collector
-func (self *DataBase) GC(rate int64) {
+// set garbage collector
+func (self *Set) GC(rate int64) {
 	self.mu.Lock()
-	for name, collection := self.Collections {
-		if ((collection.ts.Unix() + rate) < time.Now().Unix()) {
-			delete(self.Collections, name)
+	if record, ok := self.Records["conf"]; ok {
+		if time, ok := record["ts"]; ok {
+			if ts, err := strconv.ParseInt(time[0], 10, 64); != nil {
+				log.Println(err)	
+			}
+			if (ts + rate) < time.Now().Unix() {
+				record = nil
+				delete(record, )
+			}
+		}
+	}
+	for key, record := self.Records {
+		if ((record["ts"][0].Unix() + rate) < time.Now().Unix()) {
+			record = nil
+			delete(record, key)
 		} else { break }
 	}
 	self.mu.Unlock()
