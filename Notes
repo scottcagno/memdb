@@ -7,6 +7,14 @@ little over 1kb of data at a fairly consist rate of ~5.25 seconds per
 out in the record as hexadecimal data. My 1kb data set may in fact be a
 significant amount larger than 1kb stored in each record. Not quite sure.
 
+It should also be noted that each record was a newly initialized Record
+struct containing []byte for both the keys and values. 250,000 records
+filled with the dataset was occupying around ~1GB. Each key was filled
+with "key_i" (i being the iteration of the counter), and each value was
+filled with "val_b" (being make([]byte, 1<<10), then filled with random
+string encoding data and spit back into b as hex.) Around ~4GB was used
+In total.
+
 Refer to kvmdb structure (not yet committed), although it is simplistic
 it is a good continuation path that allows for fairly easy transaction
 support to be added, as well as other possibilities such as search by 
@@ -18,6 +26,9 @@ possibly replacing Record struct with *map[string][]string may allow for
 some of that performance gain. Although storing keys and values (as they
 are now) also has some performance gain in the areas of marshaling to json,
 or dumping/reading data to/from disk.
+
+These tests were run on 3 separate machines, all results varied but were
+within a very close margin, so I'm considering these findings to be accurate.
 
 More to come. Also, don't forget contextual collection locking for trans-
 actions if we choose to go that route.
