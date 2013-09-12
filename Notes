@@ -4,8 +4,8 @@ Current tests confirm kvmdb inserting 1,000,000 records containing a
 little over 1kb of data at a fairly consist rate of ~5.25 seconds per
 250,000 records. Also the data set I'm initializing is a []byte with
 1kb of 0 values, to which I am filling with random hash then printing
-out in the record as hexadecimal data, so my 1kb set may in fact be a
-significant amount larger than 1kb stored in each record.
+out in the record as hexadecimal data. My 1kb data set may in fact be a
+significant amount larger than 1kb stored in each record. Not quite sure.
 
 Refer to kvmdb structure (not yet committed), although it is simplistic
 it is a good continuation path that allows for fairly easy transaction
@@ -18,5 +18,8 @@ possibly replacing Record struct with *map[string][]string may allow for
 some of that performance gain. Although storing keys and values (as they
 are now) also has some performance gain in the areas of marshaling to json,
 or dumping/reading data to/from disk.
+
+More to come. Also, don't forget contextual collection locking for trans-
+actions if we choose to go that route.
 
 
